@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/muteListFragment">
+    <fragment
+        android:id="@+id/muteListFragment"
+        android:name="com.example.simplemute.fragments.MuteListFragment"
+        android:label="fragment_mute_list"
+        tools:layout="@layout/fragment_mute_list" >
+        <action
+            android:id="@+id/action_muteListFragment_to_createMuteFragment"
+            app:destination="@id/createMuteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createMuteFragment"
+        android:name="com.example.simplemute.fragments.CreateMuteFragment"
+        android:label="fragment_create_mute"
+        tools:layout="@layout/fragment_create_mute" >
+        <action
+            android:id="@+id/action_createMuteFragment_to_muteListFragment"
+            app:destination="@id/muteListFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.simplemute.MainActivity"
+        android:label="MainActivity" />
+</navigation>

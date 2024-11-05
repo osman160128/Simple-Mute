@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/unmute"
+        android:enabled="true"
+        android:icon="@drawable/unmute"
+        android:title="Normal"/>
+    <item
+        android:id="@+id/mutes"
+        android:enabled="true"
+        android:icon="@drawable/silence"
+        android:title="Mute"/>
+    <item
+        android:id="@+id/vibration"
+        android:enabled="true"
+        android:icon="@drawable/vibration"
+        android:title="Vibration"/>
+    <item
+        android:id="@+id/dns"
+        android:enabled="true"
+        android:icon="@drawable/moon"
+        android:title="DNS"/>
+    <item
+        android:id="@+id/page_4"
+        android:enabled="true"
+        android:icon="@drawable/alarmclock"
+        android:title="Alarm"/>
+</menu>

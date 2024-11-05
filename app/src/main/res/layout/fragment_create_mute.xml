@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="cretemute"
+            type="com.example.simplemute.fragments.CreateMuteFragment" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragments.CreateMuteFragment"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp">
+
+            <TextView
+                android:id="@+id/createMuteFragment_cancel_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="Cancel"
+                android:textStyle="bold"
+                android:layout_marginTop="2.5dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mute"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold"
+                android:textSize="25dp"
+                />
+            <TextView
+                android:id="@+id/saveMute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:layout_alignParentRight="true"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_marginTop="2.5dp"
+                />
+        </RelativeLayout>
+
+
+        <EditText
+            android:id="@+id/muteTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Title"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:background="@drawable/edit_text_bg"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sehedule time"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2"
+                android:orientation="horizontal"
+                >
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="5dp"
+                    app:cardUseCompatPadding="true"
+                    >
+                    <LinearLayout
+                        android:id="@+id/startAtBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp"
+                        android:layout_gravity="center"
+                        >
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:textSize="15dp"
+                            android:text="Start at"
+                            android:textAlignment="center"
+                            />
+                        <TextView
+                            android:id="@+id/startAtTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:textSize="25dp"
+                            android:text="00:00"
+                            android:textAlignment="center"
+                            />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="5dp"
+                    app:cardUseCompatPadding="true"
+                    >
+                    <LinearLayout
+                        android:id="@+id/endAtBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp"
+                        android:layout_gravity="center"
+                        >
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:textSize="15dp"
+                            android:text="End at"
+                            android:textAlignment="center"
+                            />
+                        <TextView
+                            android:id="@+id/endAtTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="bold"
+                            android:textSize="25dp"
+                            android:text="00:00"
+                            android:textAlignment="center"
+                            />
+
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:weightSum="3"
+           >
+           <androidx.cardview.widget.CardView
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               app:cardElevation="3dp"
+               app:cardCornerRadius="3dp"
+               app:cardUseCompatPadding="true"
+               >
+               <TextView
+                   android:id="@+id/fragment_createmute_once"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:text="Once"
+                   android:textSize="15dp"
+                   android:textStyle="bold"
+                   android:textAlignment="center"
+                   android:padding="10dp"
+                   />
+
+           </androidx.cardview.widget.CardView>
+           <androidx.cardview.widget.CardView
+
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               app:cardElevation="3dp"
+               app:cardCornerRadius="3dp"
+               app:cardUseCompatPadding="true"
+               >
+               <TextView
+                   android:id="@+id/fragment_createmute_every_day"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:text="Every Day"
+                   android:textSize="15dp"
+                   android:textStyle="bold"
+                   android:textAlignment="center"
+                   android:padding="10dp"
+                   />
+
+           </androidx.cardview.widget.CardView>
+           <androidx.cardview.widget.CardView
+
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               app:cardElevation="3dp"
+               app:cardCornerRadius="3dp"
+               app:cardUseCompatPadding="true"
+               >
+               <TextView
+                   android:id="@+id/fragment_createmute_recurring"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:text="Repeat"
+                   android:textSize="15dp"
+                   android:textStyle="bold"
+                   android:textAlignment="center"
+                   android:padding="10dp"
+                   />
+
+           </androidx.cardview.widget.CardView>
+
+       </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fragment_createalarm_recurring_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="7"
+            android:visibility="gone">
+
+            <ToggleButton
+                android:id="@+id/fragment_createalarm_checkMon"
+                style="@style/toggleButton"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/toggle_bg"
+                android:textOff="Mon"
+                android:textOn="Mon" />
+
+            <ToggleButton
+                android:id="@+id/fragment_createalarm_checkTue"
+                style="@style/toggleButton"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/toggle_bg"
+                android:textOff="Tue"
+                android:textOn="Tue" />
+
+            <ToggleButton
+                android:id="@+id/fragment_createalarm_checkWed"
+                style="@style/toggleButton"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/toggle_bg"
+                android:textOff="Wed"
+                android:textOn="Wed" />
+
+            <ToggleButton
+                android:id="@+id/fragment_createalarm_checkThu"
+                style="@style/toggleButton"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/toggle_bg"
+                android:textOff="Thu"
+                android:textOn="Thu" />
+
+            <ToggleButton
+                android:id="@+id/fragment_createalarm_checkFri"
+                style="@style/toggleButton"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/toggle_bg"
+                android:textOff="Fri"
+                android:textOn="Fri" />
+
+            <ToggleButton
+                android:id="@+id/fragment_createalarm_checkSat"
+                style="@style/toggleButton"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/toggle_bg"
+                android:textOff="Sat"
+                android:textOn="Sat" />
+
+            <ToggleButton
+                android:id="@+id/fragment_createalarm_checkSun"
+                style="@style/toggleButton"
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="@drawable/toggle_bg"
+                android:textOff="Sun"
+                android:textOn="Sun" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>
