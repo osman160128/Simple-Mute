@@ -8,17 +8,11 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
-
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.example.simplemute.Mute;
 import com.example.simplemute.R;
-import com.example.simplemute.broadcastreciver.MuteService;
-import com.example.simplemute.broadcastreciver.RescheduleMuteService;
-import com.example.simplemute.viewmodel.MuteListViewModel;
+import com.example.simplemute.broadcastreciver.RescheduleAlarmsService;
 
 import java.util.Calendar;
 
@@ -31,12 +25,12 @@ public class UnMuteBroadCastReciver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         Bundle bundle=intent.getBundleExtra(context.getString(R.string.bundle_alarm_obj));
-        Toast.makeText(context, "UnMuted Broadcast", Toast.LENGTH_SHORT).show();
+
         if (bundle!=null)
             mute =(Mute)bundle.getSerializable(context.getString(R.string.arg_alarm_obj));
         if (mute != null) {
             if (!mute.isRecurring()) {
-                Toast.makeText(context, "mute is not null in unMuteBroadcast", Toast.LENGTH_SHORT).show();
+
                 if(!mute.isStarted()){
                     muteListViewModel.delete(mute.getMuteId());
                     mute.cancelAlarm(context);
@@ -48,8 +42,6 @@ public class UnMuteBroadCastReciver extends BroadcastReceiver {
                 }
             }
 
-        }else {
-            Toast.makeText(context, "mute is null in unMuteBroadcast", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -89,14 +81,5 @@ public class UnMuteBroadCastReciver extends BroadcastReceiver {
                 return false;
         }
         return false;
-    }
-
-    private void startRescheduleAlarmsService(Context context) {
-        Intent intentService = new Intent(context, RescheduleMuteService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(intentService);
-        } else {
-            context.startService(intentService);
-        }
     }
 }

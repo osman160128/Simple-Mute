@@ -32,10 +32,11 @@ public class Mute implements Serializable {
     private int hourFrom,minuteFrom,hourTo,minuteTo;
     private String pmAmFrom,pmAmTo;
     private boolean started,recurring;
-
+    int year, month,day;
     private boolean monday,tuseday,wednesday,thursday,friday,saturday,sunday;
 
-    public Mute(int muteId, String title, int hourFrom, int minuteFrom, int hourTo, int minuteTo,String pmAmFrom,String pmAmTo, boolean started, boolean recurring, boolean monday, boolean tuseday, boolean wednesday, boolean thursday, boolean friday, boolean saturday, boolean sunday) {
+    public Mute(int muteId, String title, int hourFrom, int minuteFrom, int hourTo, int minuteTo,String pmAmFrom,String pmAmTo,int year,int month,int day,
+                boolean started, boolean recurring, boolean monday, boolean tuseday, boolean wednesday, boolean thursday, boolean friday, boolean saturday, boolean sunday) {
         this.muteId = muteId;
         this.title = title;
         this.hourFrom = hourFrom;
@@ -44,6 +45,9 @@ public class Mute implements Serializable {
         this.minuteTo = minuteTo;
         this.pmAmFrom = pmAmFrom;
         this.pmAmTo = pmAmTo;
+        this.year  = year;
+        this.month = month;
+        this.day = day;
         this.started = started;
         this.recurring = recurring;
         this.monday = monday;
@@ -55,7 +59,29 @@ public class Mute implements Serializable {
         this.sunday = sunday;
     }
 
+    public int getYear() {
+        return year;
+    }
 
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
 
     public int getMinuteFrom() {
         return minuteFrom;
@@ -205,11 +231,12 @@ public class Mute implements Serializable {
         calendarFrom.set(Calendar.MINUTE, minuteFrom);
         calendarFrom.set(Calendar.SECOND, 0);
         calendarFrom.set(Calendar.MILLISECOND, 0);
+
         Intent intentFrom = new Intent(context, MuteBroadcastReciver.class);
         Bundle bundleFrom=new Bundle();
         bundleFrom.putSerializable(context.getString(R.string.arg_alarm_obj),this);
         intentFrom.putExtra(context.getString(R.string.bundle_alarm_obj),bundleFrom);
-        PendingIntent PendingIntentFrom = PendingIntent.getBroadcast(context, muteId, intentFrom, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_MUTABLE);
+        PendingIntent PendingIntentFrom = PendingIntent.getBroadcast(context, muteId, intentFrom,PendingIntent.FLAG_ONE_SHOT| PendingIntent.FLAG_MUTABLE);
 
         Calendar calendarTo = Calendar.getInstance();
         calendarTo.setTimeInMillis(System.currentTimeMillis());
@@ -218,12 +245,22 @@ public class Mute implements Serializable {
         calendarTo.set(Calendar.SECOND, 0);
         calendarTo.set(Calendar.MILLISECOND, 0);
 
+        if(year>0){
+            calendarFrom.set(Calendar.DAY_OF_MONTH,day);
+            calendarFrom.set(Calendar.MONTH,month);
+            calendarFrom.set(Calendar.YEAR,year);
+
+            calendarTo.set(Calendar.DAY_OF_MONTH,day);
+            calendarTo.set(Calendar.MONTH,month);
+            calendarTo.set(Calendar.YEAR,year);
+
+        }
 
         Intent intentTo = new Intent(context, UnMuteBroadCastReciver.class);
         Bundle bundle=new Bundle();
         bundle.putSerializable(context.getString(R.string.arg_alarm_obj),this);
         intentTo.putExtra(context.getString(R.string.bundle_alarm_obj),bundle);
-        PendingIntent PendingIntenTo = PendingIntent.getBroadcast(context, muteId, intentTo, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_MUTABLE);
+        PendingIntent PendingIntenTo = PendingIntent.getBroadcast(context, muteId*10000, intentTo, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
 
         // if alarm time has already passed, increment day by 1
         if (calendarFrom.getTimeInMillis() <= System.currentTimeMillis()) {
@@ -237,16 +274,17 @@ public class Mute implements Serializable {
 
         if (!recurring) {
 
-            alarmManager.setExact(
+            alarmManager.setExactAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
                     calendarFrom.getTimeInMillis(),
                     PendingIntentFrom
             );
-            alarmManager2.setExact(
+            alarmManager2.setExactAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
                     calendarTo.getTimeInMillis(),
                     PendingIntenTo
             );
+
 
         } else {
 
@@ -306,19 +344,11 @@ public class Mute implements Serializable {
         Intent intent = new Intent(context, MuteBroadcastReciver.class);
         PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(context, muteId, intent, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_MUTABLE);
         alarmManager.cancel(alarmPendingIntent);
-        this.started = false;
-        String toastText = String.format("Alarm cancelled for %02d:%02d", hourFrom, minuteFrom);
-        Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show();
-        Log.i("cancel", toastText);
-
         AlarmManager alarmManager2 = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intentTo = new Intent(context, UnMuteBroadCastReciver.class);
         PendingIntent alarmPendingIntentTo = PendingIntent.getBroadcast(context,muteId, intentTo, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_MUTABLE);
         alarmManager2.cancel(alarmPendingIntentTo);
         this.started = false;
-        String toastTextTo = String.format("Alarm cancelled for %02d:%02d", hourTo, minuteTo);
-        Toast.makeText(context, toastTextTo, Toast.LENGTH_SHORT).show();
-        Log.i("cancel", toastTextTo);
 
 
     }

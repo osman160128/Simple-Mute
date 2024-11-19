@@ -1,7 +1,9 @@
 package com.example.simplemute.fragments;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
@@ -29,6 +31,7 @@ import com.example.simplemute.viewmodel.CreateAlarmViewmodel;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
+import java.util.Calendar;
 import java.util.Random;
 
 
@@ -39,11 +42,23 @@ public class CreateMuteFragment extends Fragment {
     Mute mute;
 
     CreateAlarmViewmodel createAlarmViewmodel;
-    int hourFrom,minuteFrom,hourTo,minuteTo;
+    int hourFrom=0,minuteFrom=0,hourTo=0,minuteTo=0;
     String amPmFrom,amPmTo;
     boolean isStared=false;
     boolean isRecuring;
+    int dateMonth =-1 ;
+    int dateYear =-1;
+    int dateDay =-1 ;
+    // SharedPreferences key for alarmId
+// SharedPreferences key for alarmId
+    private static final String PREFS_NAME = "MuteAppPrefs";
+    private static final String ALARM_ID_KEY = "current_alarm_id";
 
+    // SharedPreferences object
+    private SharedPreferences sharedPreferences;
+
+    // Static variable to track the current alarmId
+    private int currentAlarmId;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,12 +76,15 @@ public class CreateMuteFragment extends Fragment {
         fragmentCreateMuteBinding = FragmentCreateMuteBinding.inflate(inflater, container, false);
         View view = fragmentCreateMuteBinding.getRoot();
 
+        sharedPreferences = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        currentAlarmId = getCurrentAlarmIdFromPrefs();
         fragmentCreateMuteBinding.startAtBtn.setOnClickListener(View->startTimeMethod());
         fragmentCreateMuteBinding.endAtBtn.setOnClickListener(View->endTimeMethod());
 
         if(mute!=null){
             updateMuteInfo(mute);
         }
+
 
         fragmentCreateMuteBinding.fragmentCreatemuteOnce.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,8 +94,8 @@ public class CreateMuteFragment extends Fragment {
 
                 //set background for button
                 fragmentCreateMuteBinding.fragmentCreatemuteOnce.setBackgroundResource(R.color.colorAccent);
-                fragmentCreateMuteBinding.fragmentCreatemuteEveryDay.setBackgroundResource(R.color.white);
-                fragmentCreateMuteBinding.fragmentCreatemuteRecurring.setBackgroundResource(R.color.white);
+                fragmentCreateMuteBinding.fragmentCreatemuteEveryDay.setBackgroundResource(R.color.bgcolor);
+                fragmentCreateMuteBinding.fragmentCreatemuteRecurring.setBackgroundResource(R.color.bgcolor);
 
                 //set tex color for background
                 fragmentCreateMuteBinding.fragmentCreatemuteOnce.setTextColor(Color.parseColor("#FFFFFF"));
@@ -93,11 +111,10 @@ public class CreateMuteFragment extends Fragment {
             public void onClick(View v) {
                 isStared = true ;
                 isRecuring = false;
-
                 //set background for button
                 fragmentCreateMuteBinding.fragmentCreatemuteEveryDay.setBackgroundResource(R.color.colorAccent);
-                fragmentCreateMuteBinding.fragmentCreatemuteOnce.setBackgroundResource(R.color.white);
-                fragmentCreateMuteBinding.fragmentCreatemuteRecurring.setBackgroundResource(R.color.white);
+                fragmentCreateMuteBinding.fragmentCreatemuteOnce.setBackgroundResource(R.color.bgcolor);
+                fragmentCreateMuteBinding.fragmentCreatemuteRecurring.setBackgroundResource(R.color.bgcolor);
 
                 //set tex color for background
                 fragmentCreateMuteBinding.fragmentCreatemuteOnce.setTextColor(Color.parseColor("#000000"));
@@ -113,8 +130,8 @@ public class CreateMuteFragment extends Fragment {
                 isStared = true;
                 isRecuring = true;
                 fragmentCreateMuteBinding.fragmentCreatemuteRecurring.setBackgroundResource(R.color.colorAccent);
-                fragmentCreateMuteBinding.fragmentCreatemuteEveryDay.setBackgroundResource(R.color.white);
-                fragmentCreateMuteBinding.fragmentCreatemuteOnce.setBackgroundResource(R.color.white);
+                fragmentCreateMuteBinding.fragmentCreatemuteEveryDay.setBackgroundResource(R.color.bgcolor);
+                fragmentCreateMuteBinding.fragmentCreatemuteOnce.setBackgroundResource(R.color.bgcolor);
 
 
                 //set tex color for background
@@ -150,29 +167,85 @@ public class CreateMuteFragment extends Fragment {
             }
         });
 
+        //select date to mute
+        fragmentCreateMuteBinding.selectdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectdate();
+            }
+        });
+
         return view;
 
     }
 
+
+    // Method to get the saved alarmId from SharedPreferences
+    private int getCurrentAlarmIdFromPrefs() {
+        return sharedPreferences.getInt(ALARM_ID_KEY, 0); // Default value is 0 if not set
+    }
+
+    // Method to save the current alarmId to SharedPreferences
+    private void saveCurrentAlarmIdToPrefs(int alarmId) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(ALARM_ID_KEY, alarmId);
+        editor.apply(); // Save the value asynchronously
+    }
+
+    //selete date method
+    private void selectdate() {
+        // Get the current date
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Create a DatePickerDialog
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                getContext(),
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(android.widget.DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        // Handle the date picked
+                    dateMonth = monthOfYear;
+                    dateYear = year;
+                    dateDay = dayOfMonth;
+                    fragmentCreateMuteBinding.showdate.setText(dateYear+"/"+dateMonth+"/"+dateDay);
+                    fragmentCreateMuteBinding.fragmentCreatemuteRecurring.setVisibility(View.GONE);
+                    fragmentCreateMuteBinding.fragmentCreatemuteEveryDay.setVisibility(View.GONE);
+                    }
+                },
+                year, month, dayOfMonth);
+        // Show the DatePickerDialog
+        datePickerDialog.show();
+    }
+
     private void endTimeMethod() {
+        // Get the current time if hourTo and minuteTo are not set
+        if (hourTo == 0 && minuteTo == 0) {
+            Calendar calendar = Calendar.getInstance();
+            hourTo = calendar.get(Calendar.HOUR_OF_DAY); // Get current hour (24-hour format)
+            minuteTo = calendar.get(Calendar.MINUTE); // Get current minute
+        }
+
         // Create a MaterialTimePicker with 12-hour clock and AM/PM input
         MaterialTimePicker picker = new MaterialTimePicker.Builder()
                 .setTitleText("Select end time")
                 .setTimeFormat(TimeFormat.CLOCK_12H)
-             //   .setInputMode(MaterialTimePicker.INPUT_MODE_KEYBOARD)// Use 12-hour format with AM/PM
+                .setHour(hourTo) // Set the hour (from stored or current time)
+                .setMinute(minuteTo) // Set the minute (from stored or current time)
                 .build();
 
         // Listener to get the selected time
         picker.addOnPositiveButtonClickListener(dialog -> {
             hourTo = picker.getHour();
             minuteTo = picker.getMinute();
-            amPmTo = (hourTo >= 12) ? "PM" : "AM";
-            int  hourToAMPM = hourTo % 12; // Convert 24-hour to 12-hour
+            amPmTo = (hourTo >= 12) ? "PM" : "AM"; // Determine AM/PM
+            int hourToAMPM = hourTo % 12; // Convert 24-hour to 12-hour
             if (hourToAMPM == 0) hourToAMPM = 12; // Handle midnight and noon case
-
             // Update TextView with selected time
             String time = String.format("%02d:%02d %s", hourToAMPM, minuteTo, amPmTo);
-            fragmentCreateMuteBinding.endAtTime.setText( time);
+            fragmentCreateMuteBinding.endAtTime.setText(time);
         });
 
         // Show the Time Picker
@@ -180,20 +253,28 @@ public class CreateMuteFragment extends Fragment {
     }
 
     private void startTimeMethod() {
+        // Get the current time if hourFrom and minuteFrom are not set
+        if (hourFrom == 0 && minuteFrom == 0) {
+            Calendar calendar = Calendar.getInstance();
+            hourFrom = calendar.get(Calendar.HOUR_OF_DAY); // Get current hour (24-hour format)
+            minuteFrom = calendar.get(Calendar.MINUTE); // Get current minute
+        }
+
         // Create a MaterialTimePicker with 12-hour clock and AM/PM input
         MaterialTimePicker picker = new MaterialTimePicker.Builder()
                 .setTitleText("Select start time")
                 .setTimeFormat(TimeFormat.CLOCK_12H)
-             //   .setInputMode(MaterialTimePicker.INPUT_MODE_KEYBOARD)// Use 12-hour format with AM/PM
+                .setHour(hourFrom) // Set the hour (from stored or current time)
+                .setMinute(minuteFrom) // Set the minute (from stored or current time)
                 .build();
 
         // Listener to get the selected time
         picker.addOnPositiveButtonClickListener(dialog -> {
             hourFrom = picker.getHour();
             minuteFrom = picker.getMinute();
-            amPmFrom = (hourFrom >= 12) ? "PM" : "AM";
-            int  hourFromAMPM = hourFrom % 12; // Convert 24-hour to 12-hour
-            if (hourFromAMPM== 0) hourFromAMPM = 12; // Handle midnight and noon case
+            amPmFrom = (hourFrom >= 12) ? "PM" : "AM"; // Determine AM/PM
+            int hourFromAMPM = hourFrom % 12; // Convert 24-hour to 12-hour
+            if (hourFromAMPM == 0) hourFromAMPM = 12; // Handle midnight and noon case
             // Update TextView with selected time
             String time = String.format("%02d:%02d %s", hourFromAMPM, minuteFrom, amPmFrom);
             fragmentCreateMuteBinding.startAtTime.setText(time);
@@ -202,6 +283,7 @@ public class CreateMuteFragment extends Fragment {
         // Show the Time Picker
         picker.show(getParentFragmentManager(), "TIME_PICKER");
     }
+
 
     private void updateMuteInfo(Mute mute) {
         fragmentCreateMuteBinding.muteTitle.setText(mute.getTitle());
@@ -219,6 +301,13 @@ public class CreateMuteFragment extends Fragment {
         if (hourToAMPM== 0) hourToAMPM = 12;
         String muteTextFrom=String.format("%02d:%02d %s",hourFromAMPM,minuteFrom,amPmFrom);
         String muteTextTo=String.format("%02d:%02d %s",hourToAMPM,minuteTo,amPmTo);
+        if(mute.getYear()<1){
+            dateYear = mute.getYear();
+            dateMonth = mute.getMonth();
+            dateDay = mute.getDay();
+            fragmentCreateMuteBinding.showdate.setText(dateYear+"/"+dateMonth+"/"+dateDay);
+
+        }
 
        // Log.d("mute is startred","mute "+mute.isStarted()+" requirment "+mute.isRecurring());
         fragmentCreateMuteBinding.startAtTime.setText( muteTextFrom);
@@ -263,16 +352,13 @@ public class CreateMuteFragment extends Fragment {
         }
 
     }
-
     public void updateScheduleFrom() {
-
         mute.cancelAlarm(getContext());
         String title = fragmentCreateMuteBinding.muteTitle.getText().toString();
         if(title.isEmpty()){
             title = getString(R.string.mute_title);
         }
 
-        Toast.makeText(getContext(), ""+hourFrom+minuteFrom+hourTo+minuteTo, Toast.LENGTH_SHORT).show();
         Mute  updateMute = new Mute(
                 mute.getMuteId(),
                 title,
@@ -282,6 +368,9 @@ public class CreateMuteFragment extends Fragment {
                 minuteTo,
                 amPmFrom,
                 amPmTo,
+                dateYear,
+                dateMonth,
+                dateDay,
                 isStared,
                 isRecuring,
                 fragmentCreateMuteBinding.fragmentCreatealarmCheckMon.isChecked(),
@@ -302,9 +391,12 @@ public class CreateMuteFragment extends Fragment {
         if(title.isEmpty()){
             title = getString(R.string.mute_title);
         }
-        Toast.makeText(getContext(), "alarm is click", Toast.LENGTH_SHORT).show();
 
-        int alarmId = new Random().nextInt(Integer.MAX_VALUE);
+        // Use the current alarmId and increment it
+        int alarmId = currentAlarmId++;
+
+        // Save the updated alarmId back to SharedPreferences
+        saveCurrentAlarmIdToPrefs(currentAlarmId);;
 
             Mute mute = new Mute(
                     alarmId,
@@ -315,6 +407,9 @@ public class CreateMuteFragment extends Fragment {
                     minuteTo,
                     amPmFrom,
                     amPmTo,
+                    dateYear,
+                    dateMonth,
+                    dateDay,
                     isStared,
                     isRecuring,
                     fragmentCreateMuteBinding.fragmentCreatealarmCheckMon.isChecked(),
@@ -327,7 +422,6 @@ public class CreateMuteFragment extends Fragment {
             );
             createAlarmViewmodel.insert(mute);
             mute.shedule(getContext());
-
     }
 
     @Override

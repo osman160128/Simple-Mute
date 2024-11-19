@@ -65,6 +65,12 @@ public class MuteViewHolder extends RecyclerView.ViewHolder {
             }else{
                 muteRecuring.setImageResource(R.drawable.ic_looks_one_black_24dp);
                 muteRecurringDays.setText("Once off");
+                if(mute.getYear()<1){
+                    muteDay.setText(DayUtil.getDay(mute.getHourTo(),mute.getMinuteTo()));
+
+                }else {
+                    muteDay.setText(mute.getYear()+"/"+mute.getMonth()+"/"+mute.getDay());
+                }
             }
 
         }
@@ -102,7 +108,6 @@ public class MuteViewHolder extends RecyclerView.ViewHolder {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("mute is startred","IN view model mute "+mute.isStarted()+" requirment "+mute.isRecurring());
                listener.onItemClick(mute,view);
             }
         });

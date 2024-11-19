@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,6 +22,9 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.simplemute.Mute;
@@ -43,6 +47,7 @@ public class MuteListFragment extends Fragment implements OnToggleMuteListener{
     MuteRecylerViewAdapter muteRecylerViewAdapter;
     public static MuteListViewModel muteListViewModel;
     RecyclerView muteRecylerView;
+    CardView addMuteCard;
 
     AudioManager audioManager;
     NotificationManager nm;
@@ -59,9 +64,17 @@ public class MuteListFragment extends Fragment implements OnToggleMuteListener{
         muteListViewModel.getAlarmsLiveData().observe(this, new Observer<List<Mute>>() {
             @Override
             public void onChanged(List<Mute> mutes) {
-                if(mutes!=null){
+                if(mutes!=null) {
                     muteRecylerViewAdapter.setMutes(mutes);
                 }
+
+                //start if you have your database is empty it showes the add button in top
+                if (mutes.isEmpty()){
+                    addMuteCard.setVisibility(View.VISIBLE);
+                }else {
+                    addMuteCard.setVisibility(View.GONE );
+                }
+                //end  if you have your database is empty it showes the add button in top
             }
         });
     }
@@ -78,9 +91,20 @@ public class MuteListFragment extends Fragment implements OnToggleMuteListener{
         muteRecylerView.setAdapter(muteRecylerViewAdapter);
         NotificationManager nm  = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
        gotoCrateMuteFragment =view.findViewById(R.id.gotoCreateMute);
+       addMuteCard = view.findViewById(R.id.addMuteCard);
 
+       addMuteCard.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
 
-       gotoCrateMuteFragment.setOnClickListener(new View.OnClickListener() {
+               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 && !nm.isNotificationPolicyAccessGranted()) {
+                   startActivity(new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS));
+               }
+               Navigation.findNavController(view).navigate(R.id.action_muteListFragment_to_createMuteFragment);
+           }
+       });
+
+        gotoCrateMuteFragment.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
 

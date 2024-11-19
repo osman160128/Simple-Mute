@@ -29,26 +29,34 @@ public class MuteBroadcastReciver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
+            String toastText = String.format("Alarm Reboot");
+            Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show();
+            startRescheduleAlarmsService(context);
+        }
+        else {
 
             audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-            Bundle bundle=intent.getBundleExtra(context.getString(R.string.bundle_alarm_obj));
+            Bundle bundle = intent.getBundleExtra(context.getString(R.string.bundle_alarm_obj));
 
-            if (bundle!=null)
-                mute =(Mute)bundle.getSerializable(context.getString(R.string.arg_alarm_obj));
+            if (bundle != null)
+                mute = (Mute) bundle.getSerializable(context.getString(R.string.arg_alarm_obj));
             String toastText = String.format("Alarm Received");
             Toast.makeText(context, toastText, Toast.LENGTH_SHORT).show();
-            if(mute!=null) {
+            if (mute != null) {
                 if (!mute.isRecurring()) {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                        startAlarmService(context, mute);
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    startAlarmService(context, mute);
                 } else {
                     if (isAlarmToday(mute)) {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                         startAlarmService(context, mute);
                     }
                 }
-            }else {
+            } else {
                 Toast.makeText(context, "mute is not null", Toast.LENGTH_SHORT).show();
             }
+        }
 
     }
     boolean isAlarmToday(Mute alarm1) {
@@ -104,7 +112,7 @@ public class MuteBroadcastReciver extends BroadcastReceiver {
 
     }
     private void startRescheduleAlarmsService(Context context) {
-        Intent intentService = new Intent(context, RescheduleMuteService.class);
+        Intent intentService = new Intent(context, RescheduleAlarmsService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(intentService);
         } else {

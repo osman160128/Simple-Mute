@@ -8,4 +8,5 @@
     <color name="translucent_grey">#D38F8E8E</color>
     <color name="toggleButtonBg">#7B1FA2</color>
     <color name="textColor">#7B1FA2</color>
+    <color name="bgcolor">#22A749E5</color>
 </resources>

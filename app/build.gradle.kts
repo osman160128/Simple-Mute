@@ -52,7 +52,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
+    implementation ("androidx.lifecycle:lifecycle-service:2.7.0")
+    implementation ("com.android.support:multidex:1.0.3")
     // Jetpack Compose Integration
     implementation ("androidx.navigation:navigation-compose:2.8.2")
 

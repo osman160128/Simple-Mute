@@ -12,30 +12,77 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="8dp"
-        tools:context=".fragments.MuteListFragment">
+        android:padding="8dp"
+        tools:context=".fragments.MuteListFragment"
+        android:background="#22A749E5"
+        >
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/addMuteCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:cardUseCompatPadding="true"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="5dp"
+            android:layout_marginTop="30dp"
+            android:visibility="gone"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:background="#32A749E5"
+       >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Select time"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:textSize="20dp" />
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/baseline_add_circle_outline_24"
+                    android:layout_gravity="center_horizontal"
+
+                    />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/showMutelistRecylerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
-            android:layout_marginTop="25dp"
-
-     />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="8dp"
+            android:layout_marginTop="30dp"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/gotoCreateMute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="56dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/baseline_add_circle_outline_24"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/baseline_add_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.542"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:fabCustomSize="70dp"
+            app:fabSize="auto"
+            app:maxImageSize="60dp"
+            />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
