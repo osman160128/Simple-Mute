@@ -296,7 +296,7 @@ public class CreateMuteFragment extends Fragment {
         amPmTo = mute.getPmAmTo();
         int  hourFromAMPM = hourFrom % 12; // Convert 24-hour to 12-hour
         if (hourFromAMPM== 0) hourFromAMPM = 12;
-        int hourTo =  mute.getHourFrom();
+        int hourTo =  mute.getHourTo();
         int  hourToAMPM = hourTo % 12; // Convert 24-hour to 12-hour
         if (hourToAMPM== 0) hourToAMPM = 12;
         String muteTextFrom=String.format("%02d:%02d %s",hourFromAMPM,minuteFrom,amPmFrom);

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.simplemute.Mute;
 import com.example.simplemute.R;
+import com.example.simplemute.broadcastreciver.MuteService;
 import com.example.simplemute.broadcastreciver.RescheduleAlarmsService;
 
 import java.util.Calendar;
@@ -36,9 +37,11 @@ public class UnMuteBroadCastReciver extends BroadcastReceiver {
                     mute.cancelAlarm(context);
                 }
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                startAlarmService(context, mute);
             } else {
                 if (isAlarmToday(mute)) {
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                    startAlarmService(context, mute);
                 }
             }
 
@@ -81,5 +84,21 @@ public class UnMuteBroadCastReciver extends BroadcastReceiver {
                 return false;
         }
         return false;
+    }
+
+    void startAlarmService(Context context, Mute mute1) {
+        Intent intentService = new Intent(context, MuteService.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(context.getString(R.string.arg_alarm_obj), mute1);
+        intentService.putExtra(context.getString(R.string.bundle_alarm_obj), bundle);
+
+        // Pass if it's a start or end alarm
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intentService);
+        } else {
+            context.startService(intentService);
+        }
+
     }
 }

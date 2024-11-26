@@ -52,9 +52,6 @@
             android:name=".broadcastreciver.database.UnMuteBroadCastReciver"
             android:enabled="true"
             android:exported="false"> <!-- set exported to false -->
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
         </receiver>
 
 
